@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.pezshkyar.fazli"
-    compileSdk = 33
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -41,5 +41,6 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 }
+
 
 
