@@ -295,11 +295,16 @@ This project is licensed under the **MIT License** — see the LICENSE file.
 
 ---
 
-## 📬 Contact
-- Developer: ehsan fazli
-- Telegram: @Devehsan
-- Email: ehsanehsanfazlinejad.com
-- Website: https://ehsanjs.ir
+## 👨‍💻 Developer
+
+**Ehsan Fazli**  
+🚀 Full-Stack & Mobile Developer | Flutter Enthusiast | API Designer  
+
+- 📧 Email: [ehsanehsanfazlinejad.com](mailto:ehsanehsanfazlinejad.com)  
+- 🌐 Website: [https://ehsanjs.ir](https://ehsanjs.ir)  
+- 💬 Telegram: [@Devehsan](https://t.me/Devehsan)  
+- 🐙 GitHub: [tsshack](https://github.com/tsshack)  
+- 🔗 LinkedIn: [linkedin.com/in/ehsanfazli](https://linkedin.com/in/ehsanfazli)  
 
 ---
 
