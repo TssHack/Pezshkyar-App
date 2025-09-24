@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>پزشکیار</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>پزشکیار</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(FLUTTER_BUILD_NAME)</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>$(FLUTTER_BUILD_NUMBER)</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    
+    <!-- Launch Screen -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    
+    <!-- Main Interface -->
+    <key>UIMainStoryboardFile</key>
+    <string>Main</string>
+    
+    <!-- Supported Orientations -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    
+    <!-- Device Capabilities -->
+    <key>UIRequiresFullScreen</key>
+    <false/>
+    <key>UIStatusBarHidden</key>
+    <false/>
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleLightContent</string>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <true/>
+    
+    <!-- Performance Settings -->
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
+    
+    <!-- Network Security -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>your-api-domain.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSExceptionMinimumTLSVersion</key>
+                <string>TLSv1.2</string>
+            </dict>
+        </dict>
+    </dict>
+    
+    <!-- Permissions Descriptions -->
+    <key>NSCameraUsageDescription</key>
+    <string>برای اسکن مدارک پزشکی و عکس‌های مرتبط با سلامتی به دوربین نیاز داریم</string>
+    
+    <key>NSMicrophoneUsageDescription</key>
+    <string>برای ضبط صدا و یادداشت‌های صوتی مشاوره‌های پزشکی به میکروفون نیاز داریم</string>
+    
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>برای دسترسی به عکس‌های پزشکی و اشتراک‌گذاری آنها با پزشک به گالری نیاز داریم</string>
+    
+    <key>NSContactsUsageDescription</key>
+    <string>برای اشتراک‌گذاری اطلاعات پزشکی با مخاطبان مورد اعتماد به لیست مخاطبان نیاز داریم</string>
+    
+    <key>NSCalendarsUsageDescription</key>
+    <string>برای تنظیم یادآوری‌های دارویی و قرارهای ملاقات پزشکی به تقویم نیاز داریم</string>
+    
+    <key>NSRemindersUsageDescription</key>
+    <string>برای ایجاد یادآوری‌های دارویی و مراجعات پزشکی به یادآورها نیاز داریم</string>
+    
+    <key>NSHealthShareUsageDescription</key>
+    <string>برای دسترسی به اطلاعات سلامتی شما و ارائه مشاوره دقیق‌تر به Health نیاز داریم</string>
+    
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>برای به‌روزرسانی اطلاعات سلامتی شما در برنامه Health نیاز داریم</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>برای یافتن نزدیک‌ترین مراکز درمانی در مواقع اضطراری به موقعیت مکانی شما نیاز داریم</string>
+    
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>برای یافتن نزدیک‌ترین مراکز درمانی به موقعیت مکانی شما نیاز داریم</string>
+    
+    <key>NSFaceIDUsageDescription</key>
+    <string>برای ورود امن و حفاظت از اطلاعات پزشکی شما به Face ID نیاز داریم</string>
+    
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>برای تبدیل گفتار به متن در مشاوره‌های پزشکی به تشخیص صدا نیاز داریم</string>
+    
+    <key>NSUserTrackingUsageDescription</key>
+    <string>برای بهبود خدمات پزشکی و ارائه محتوای مرتبط با سلامتی شما نیاز داریم</string>
+    
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>location</string>
+        <string>voip</string>
+        <string>fetch</string>
+        <string>processing</string>
+    </array>
+    
+    <!-- URL Schemes -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.pezeshkyar.fazli</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>pezeshkyar</string>
+            </array>
+        </dict>
+    </array>
+    
+    <!-- Document Types -->
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>pdf</string>
+                <string>jpg</string>
+                <string>jpeg</string>
+                <string>png</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>Medical Document</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+        </dict>
+    </array>
+    
+    <!-- App Category -->
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.medical</string>
+    
+    <!-- Privacy Settings -->
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>C545.1</string>
+            </array>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>3B52.1</string>
+            </array>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>35F9.1</string>
+            </array>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+        </dict>
+    </array>
+    
+    <!-- Fonts -->
+    <key>UIAppFonts</key>
+    <array>
+        <string>Vazirmatn-Regular.ttf</string>
+        <string>Vazirmatn-Bold.ttf</string>
+        <string>Vazirmatn-Medium.ttf</string>
+    </array>
+    
+    <!-- Firebase Configuration -->
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <true/>
+    
+    <!-- Notification Settings -->
+    <key>UIUserNotificationStyle</key>
+    <string>UIUserNotificationStyleAlert</string>
+    
+    <!-- App Store Information -->
+    <key>SKAdNetworkItems</key>
+    <array>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>cstr6suwn9.skadnetwork</string>
+        </dict>
+    </array>
+</dict>
+</plist>
