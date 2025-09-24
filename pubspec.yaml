@@ -1,0 +1,76 @@
+name: pezshkyar
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  provider: ^6.0.5
+  flutter_staggered_animations: ^1.1.1
+  animations: ^2.0.7
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
+  flutter_svg: ^2.0.7
+  lottie: ^2.6.0
+  intl: ^0.20.2
+  flutter_local_notifications: ^15.1.1
+  persian_datetime_picker: ^2.6.0
+  shamsi_date: ^1.0.1
+  google_fonts: ^5.1.0
+  flutter_screenutil: ^5.8.4
+  package_info_plus : any
+  flutter_markdown: any
+  image_picker : any
+  shimmer: any
+  frosted_glass: any
+  dio : any
+  glassmorphism: ^3.0.0
+  url_launcher: ^6.3.2
+  share_plus: ^12.0.0
+  highlight: ^0.7.0
+  flutter_highlight: ^0.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  linux:
+    generate: true
+  macos:
+    generate: true
+  windows:
+    generate: true
+  image_path: "assets/icons/app_icon.png"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/animations/
+    - assets/icons/
