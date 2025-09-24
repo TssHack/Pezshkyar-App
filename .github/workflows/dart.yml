@@ -25,7 +25,7 @@ jobs:
         run: flutter build apk --release
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -41,7 +41,7 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build ipa --release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ios-ipa
           path: build/ios/ipa/*.ipa
@@ -57,7 +57,7 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build windows --release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: windows-app
           path: build/windows/runner/Release/
@@ -75,7 +75,7 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build linux --release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: linux-app
           path: build/linux/x64/release/bundle/
@@ -91,7 +91,8 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build macos --release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: macos-app
           path: build/macos/Build/Products/Release/
+
