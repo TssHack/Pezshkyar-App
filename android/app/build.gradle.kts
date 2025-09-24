@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.pezshkyar.fazli"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 35           // <-- اصلاح شد
         versionCode = 1
         versionName = "1.0"
     }
