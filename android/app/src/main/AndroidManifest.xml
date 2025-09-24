@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.pezeshkyar.fazli">
-    
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Permissions for the app -->
     <!-- Internet permission for API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -142,4 +140,5 @@
             <data android:mimeType="application/pdf" />
         </intent>
     </queries>
+
 </manifest>
