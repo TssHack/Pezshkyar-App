@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: flutter/setup-flutter@v2
+      - uses: subosito/flutter-action@v2
         with:
-          channel: stable
           flutter-version: '3.32.8'
+          channel: stable
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
@@ -25,10 +25,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: flutter/setup-flutter@v2
+      - uses: subosito/flutter-action@v2
         with:
-          channel: stable
           flutter-version: '3.32.8'
+          channel: stable
       - run: flutter pub get
       - run: flutter build ipa --release --no-codesign
       - uses: actions/upload-artifact@v4
@@ -40,10 +40,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: flutter/setup-flutter@v2
+      - uses: subosito/flutter-action@v2
         with:
-          channel: stable
           flutter-version: '3.32.8'
+          channel: stable
       - run: flutter pub get
       - run: flutter build windows --release
       - uses: actions/upload-artifact@v4
@@ -55,10 +55,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: flutter/setup-flutter@v2
+      - uses: subosito/flutter-action@v2
         with:
-          channel: stable
           flutter-version: '3.32.8'
+          channel: stable
       - run: sudo apt-get update -y
       - run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libblkid-dev libstdc++-12-dev
       - run: flutter pub get
@@ -72,10 +72,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: flutter/setup-flutter@v2
+      - uses: subosito/flutter-action@v2
         with:
-          channel: stable
           flutter-version: '3.32.8'
+          channel: stable
       - run: flutter pub get
       - run: flutter build macos --release --no-codesign
       - uses: actions/upload-artifact@v4
