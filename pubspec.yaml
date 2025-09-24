@@ -34,7 +34,7 @@ dependencies:
   flutter_svg: ^2.0.7
   lottie: ^2.6.0
   intl: ^0.20.2
-  flutter_local_notifications: ^15.1.1
+  flutter_local_notifications: any
   persian_datetime_picker: ^2.6.0
   shamsi_date: ^1.0.1
   google_fonts: ^5.1.0
@@ -73,4 +73,5 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+
     - assets/icons/
