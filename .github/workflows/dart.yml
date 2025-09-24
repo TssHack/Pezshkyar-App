@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'latest'
+          flutter-version: '3.32.8'
           channel: stable
       - run: flutter pub get
       - run: flutter test
@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'latest'
+          flutter-version: '3.32.8'
           channel: stable
       - run: flutter pub get
       - run: flutter test
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'latest'
+          flutter-version: '3.32.8'
           channel: stable
       - run: sudo apt-get update -y
       - run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'latest'
+          flutter-version: '3.32.8'
           channel: stable
       - run: flutter pub get
       - run: flutter test
