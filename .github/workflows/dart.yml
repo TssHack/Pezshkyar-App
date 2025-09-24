@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  android-ios-macos:
+  android:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -21,26 +21,60 @@ jobs:
       - name: Flutter Pub Get
         run: flutter pub get
 
-      - name: Ensure macOS runner
-        run: flutter create --platforms=macos .
-
       - name: Build Android APK
         run: flutter build apk --release
+
+      - name: Upload Artifact (Android)
+        uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: build/app/outputs/flutter-apk/*.apk
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.8"
+
+      - name: Flutter Pub Get
+        run: flutter pub get
 
       - name: Build iOS IPA
         run: flutter build ipa --release --no-codesign
 
+      - name: Upload Artifact (iOS)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios
+          path: build/ios/ipa/*.ipa
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.8"
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
       - name: Build macOS
         run: flutter build macos --release
 
-      - name: Upload Artifacts (Android/iOS/macOS)
+      - name: Upload Artifact (macOS)
         uses: actions/upload-artifact@v4
         with:
-          name: android-ios-macos
-          path: |
-            build/app/outputs/flutter-apk/*.apk
-            build/ios/ipa/*.ipa
-            build/macos/Build/Products/Release/**
+          name: macos
+          path: build/macos/Build/Products/Release/**
 
   windows:
     runs-on: windows-latest
@@ -56,13 +90,10 @@ jobs:
       - name: Flutter Pub Get
         run: flutter pub get
 
-      - name: Ensure Windows runner
-        run: flutter create --platforms=windows .
-
       - name: Build Windows
         run: flutter build windows --release
 
-      - name: Upload Artifacts (Windows)
+      - name: Upload Artifact (Windows)
         uses: actions/upload-artifact@v4
         with:
           name: windows
@@ -94,13 +125,10 @@ jobs:
       - name: Flutter Pub Get
         run: flutter pub get
 
-      - name: Ensure Linux runner
-        run: flutter create --platforms=linux .
-
       - name: Build Linux
         run: flutter build linux --release
 
-      - name: Upload Artifacts (Linux)
+      - name: Upload Artifact (Linux)
         uses: actions/upload-artifact@v4
         with:
           name: linux
