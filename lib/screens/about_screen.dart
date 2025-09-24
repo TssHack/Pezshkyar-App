@@ -531,10 +531,9 @@ class _AboutScreenState extends State<AboutScreen>
   }
 
   Future<void> _sendFeedbackToTelegram(String message) async {
-    const botToken = '8168542187:AAFptGlkr89rq1czcbTyh13RhjyuKx87fjI';
     const chatId = '-1002980426809';
 
-    final url = 'https://api.telegram.org/bot$botToken/sendMessage';
+    final url = 'https://mssagerr.vercel.app/sendMessage';
 
     try {
       await http.post(
@@ -565,3 +564,4 @@ class _AboutScreenState extends State<AboutScreen>
     }
   }
 }
+
