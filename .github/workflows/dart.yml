@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-all:
+  android-ios-macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -21,45 +21,75 @@ jobs:
       - name: Flutter Pub Get
         run: flutter pub get
 
-      # بازسازی پوشه های Linux/MacOS در صورت نبودن
-      - name: Ensure Platform Runners
-        run: |
-          if [ ! -d "linux" ]; then
-            flutter create .
-          fi
-          if [ ! -d "macos" ]; then
-            flutter create .
-          fi
+      - name: Ensure macOS runner
+        run: flutter create --platforms=macos .
 
-      # Build Android
       - name: Build Android APK
         run: flutter build apk --release
 
-      # Build iOS
       - name: Build iOS IPA
         run: flutter build ipa --release --no-codesign
 
-      # Build Windows
-      - name: Build Windows
-        run: flutter build windows --release
-
-      # Build Linux
-      - name: Build Linux
-        run: flutter build linux --release
-
-      # Build macOS
       - name: Build macOS
         run: flutter build macos --release
 
-      # Upload all artifacts
-      - name: Upload all build artifacts
+      - name: Upload Artifacts (Android/iOS/macOS)
         uses: actions/upload-artifact@v4
         with:
-          name: flutter-build-all
+          name: android-ios-macos
           path: |
             build/app/outputs/flutter-apk/*.apk
-            build/ios/ipa/**/*.ipa
-            build/ios/ipa/**/*.xcarchive
-            build/windows/runner/Release/**
-            build/linux/x64/release/bundle/**
+            build/ios/ipa/*.ipa
             build/macos/Build/Products/Release/**
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.8"
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Ensure Windows runner
+        run: flutter create --platforms=windows .
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Upload Artifacts (Windows)
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows/runner/Release/**
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.8"
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Ensure Linux runner
+        run: flutter create --platforms=linux .
+
+      - name: Build Linux
+        run: flutter build linux --release
+
+      - name: Upload Artifacts (Linux)
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/linux/x64/release/bundle/**
