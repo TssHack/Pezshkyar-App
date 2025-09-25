@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:pezshkyar/config/constants.dart';
 import 'package:pezshkyar/models/message_model.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,12 +42,13 @@ class ChatBubble extends StatefulWidget {
   _ChatBubbleState createState() => _ChatBubbleState();
 }
 
-class _ChatBubbleState extends State<ChatBubble>
-    with SingleTickerProviderStateMixin {
+class _ChatBubbleState extends State<ChatBubble> with TickerProviderStateMixin {
   bool _showActions = false;
   bool _showReactionsPanel = false;
   late AnimationController _animationController;
+  late AnimationController _bubbleAnimationController;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _bubbleScaleAnimation;
 
   @override
   void initState() {
@@ -55,14 +57,30 @@ class _ChatBubbleState extends State<ChatBubble>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+
+    _bubbleAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
     );
+
+    _bubbleScaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _bubbleAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
+
+    _bubbleAnimationController.forward();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _bubbleAnimationController.dispose();
     super.dispose();
   }
 
@@ -70,13 +88,14 @@ class _ChatBubbleState extends State<ChatBubble>
   Widget build(BuildContext context) {
     final isUser = widget.message.isUser;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Column(
         crossAxisAlignment: isUser
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
+            ? (isRTL ? CrossAxisAlignment.start : CrossAxisAlignment.end)
+            : (isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start),
         mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.showDate)
@@ -92,6 +111,13 @@ class _ChatBubbleState extends State<ChatBubble>
                       ? Colors.white.withOpacity(0.1)
                       : Colors.black.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Text(
                   widget.message.formattedDate,
@@ -105,13 +131,13 @@ class _ChatBubbleState extends State<ChatBubble>
             ),
           Row(
             mainAxisAlignment: isUser
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
+                ? (isRTL ? MainAxisAlignment.start : MainAxisAlignment.end)
+                : (isRTL ? MainAxisAlignment.end : MainAxisAlignment.start),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!isUser) _buildAvatar(isUser: false),
               Flexible(
-                child: GestureDetector(
+                child: InkWell(
                   onLongPress: () {
                     setState(() {
                       _showActions = !_showActions;
@@ -122,8 +148,11 @@ class _ChatBubbleState extends State<ChatBubble>
                       widget.onLongPress!();
                     }
                   },
+                  borderRadius: BorderRadius.circular(24),
+                  splashColor: Colors.white.withOpacity(0.3),
+                  highlightColor: Colors.white.withOpacity(0.1),
                   child: ScaleTransition(
-                    scale: _scaleAnimation,
+                    scale: _bubbleScaleAnimation,
                     child: Container(
                       constraints: BoxConstraints(maxWidth: widget.maxWidth),
                       decoration: BoxDecoration(
@@ -145,13 +174,13 @@ class _ChatBubbleState extends State<ChatBubble>
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
                           ),
                           BoxShadow(
-                            color: AppConstants.primaryColor.withOpacity(0.15),
-                            blurRadius: 15,
+                            color: AppConstants.primaryColor.withOpacity(0.2),
+                            blurRadius: 20,
                             offset: const Offset(0, 0),
                           ),
                         ],
@@ -163,8 +192,8 @@ class _ChatBubbleState extends State<ChatBubble>
                           // Message content
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 14,
+                              horizontal: 20,
+                              vertical: 16,
                             ),
                             child: Text(
                               widget.message.text,
@@ -237,8 +266,8 @@ class _ChatBubbleState extends State<ChatBubble>
 
   Widget _buildAvatar({required bool isUser}) {
     return Container(
-      width: 36,
-      height: 36,
+      width: 40,
+      height: 40,
       margin: EdgeInsets.only(left: isUser ? 0 : 8, right: isUser ? 8 : 0),
       decoration: BoxDecoration(
         gradient: isUser
@@ -258,16 +287,21 @@ class _ChatBubbleState extends State<ChatBubble>
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: AppConstants.primaryColor.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 0),
           ),
         ],
       ),
       child: Icon(
         isUser ? Icons.person : Icons.medical_services,
         color: Colors.white,
-        size: 20,
+        size: 22,
       ),
     );
   }
@@ -308,20 +342,27 @@ class _ChatBubbleState extends State<ChatBubble>
 
   Widget _buildReactions() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Wrap(
-        spacing: 6,
-        runSpacing: 6,
+        spacing: 8,
+        runSpacing: 8,
         children: widget.reactions!.map((reaction) {
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: Colors.white.withOpacity(0.3),
                 width: 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Text(
               reaction,
@@ -339,19 +380,30 @@ class _ChatBubbleState extends State<ChatBubble>
 
   Widget _buildReactionsPanel() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 10),
       child: ScaleTransition(
         scale: _scaleAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
+        child: GlassmorphicContainer(
+          width: double.infinity,
+          height: 60,
+          borderRadius: 30,
+          blur: 20,
+          alignment: Alignment.center,
+          border: 1,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.9),
+              Colors.white.withOpacity(0.7),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppConstants.primaryColor.withOpacity(0.7),
+              AppConstants.secondaryColor.withOpacity(0.7),
             ],
           ),
           child: Row(
@@ -371,7 +423,7 @@ class _ChatBubbleState extends State<ChatBubble>
   }
 
   Widget _buildReactionButton(String emoji) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         setState(() {
           _showReactionsPanel = false;
@@ -380,9 +432,12 @@ class _ChatBubbleState extends State<ChatBubble>
           widget.onReaction!(emoji);
         }
       },
+      borderRadius: BorderRadius.circular(30),
+      splashColor: Colors.white.withOpacity(0.3),
+      highlightColor: Colors.white.withOpacity(0.1),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Text(emoji, style: const TextStyle(fontSize: 22)),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Text(emoji, style: const TextStyle(fontSize: 24)),
       ),
     );
   }
@@ -391,19 +446,30 @@ class _ChatBubbleState extends State<ChatBubble>
     final isUser = widget.message.isUser;
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 10),
       child: ScaleTransition(
         scale: _scaleAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
+        child: GlassmorphicContainer(
+          width: double.infinity,
+          height: 60,
+          borderRadius: 30,
+          blur: 20,
+          alignment: Alignment.center,
+          border: 1,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withOpacity(0.9),
+              Colors.white.withOpacity(0.7),
+            ],
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppConstants.primaryColor.withOpacity(0.7),
+              AppConstants.secondaryColor.withOpacity(0.7),
             ],
           ),
           child: Row(
@@ -476,11 +542,14 @@ class _ChatBubbleState extends State<ChatBubble>
   }) {
     return Tooltip(
       message: tooltip,
-      child: GestureDetector(
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(30),
+        splashColor: Colors.white.withOpacity(0.3),
+        highlightColor: Colors.white.withOpacity(0.1),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Icon(icon, size: 22, color: AppConstants.primaryColor),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Icon(icon, size: 24, color: AppConstants.primaryColor),
         ),
       ),
     );
