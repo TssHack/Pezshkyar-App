@@ -134,7 +134,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          'icons/app_icon.png',
+                          'assets/icons/app_icon.png',
                           width: 140,
                           height: 140,
                           fit: BoxFit.cover,
@@ -259,3 +259,4 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+
