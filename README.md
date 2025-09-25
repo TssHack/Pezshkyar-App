@@ -1,57 +1,55 @@
-# Pezshkyar — Smart Medical Assistant
+# 🩺 Pezshkyar — Smart Medical Assistant
 
 ![Pezshkyar Logo](./assets/logo.png)
 
-> **Pezshkyar** is an intelligent medical assistant application built with **Flutter**, offering a seamless, responsive, and beautiful experience across Android and iOS. This README provides a professional overview with design recommendations, animation usage, and full setup instructions.
+> **Pezshkyar** is an **intelligent cross-platform medical assistant app** built with **Flutter**. It offers a smooth, responsive, and delightful experience across **Android & iOS**, empowering users with quick access to trusted medical information and an elegant, user-friendly interface.
 
 ---
 
-## 🎯 Project Goals
-- Provide fast, reliable medical information (general guidance — not a replacement for a doctor)
-- Deliver a clean, minimal, and user-friendly interface (with RTL support for Persian)
-- Smooth user experience with professional animations and micro-interactions
-- Cross-platform support (Android & iOS) with local chat history storage
+## 🎯 Vision & Goals
+- ⚡ Provide **fast & reliable medical guidance** (general, not a replacement for a doctor)
+- 🎨 Deliver a **clean, modern, and minimal UI** with **RTL support** (Persian/Farsi)
+- ✨ Enhance UX with **professional animations & micro-interactions**
+- 📱 Support **cross-platform experience** (Android & iOS) with **local storage** for chat history
 
 ---
 
 ## 🔥 Preview
-Add a **GIF demo or short video** to make the page visually appealing, for example:
-
-`./assets/demo/demo.gif`  
-(Create an `assets/demo/` folder and include demo files here)
+📽️ Add a **demo GIF/video** to showcase the app in action:  
+`./assets/demo/demo.gif`
 
 ---
 
-## ⭐ Features
-- 🩺 AI-powered medical consultation
-- 💬 Chat interface with message history
-- 🌙 Light & Dark mode toggle
-- 🔔 Push notifications
-- 📝 Quick replies for common medical questions
-- 💾 Local storage of chat history
-- 📎 Share & copy information
-- 🌐 Multilingual (with RTL support)
-- ✨ Subtle animations & smooth page transitions
+## ⭐ Core Features
+- 🧠 **AI-powered medical Q&A assistant**
+- 💬 **Interactive chat interface** with message history
+- 🌙 **Light & Dark mode** toggle
+- 🔔 **Push notifications**
+- 📝 **Quick replies** for common medical FAQs
+- 💾 **Secure local storage** for chat history
+- 📎 **Share & copy** information easily
+- 🌐 **Multilingual support** (RTL ready)
+- 🎞️ **Subtle animations** for smooth transitions
 
 ---
 
-## 🎨 Design & Animations (Recommendations)
-To enhance user experience, consider combining the following:
+## 🎨 UI & Animation Recommendations
+Boost UX with modern motion design:
 
-- **Lottie animations** for splash, empty states, success/failure
-- **Hero animations** for seamless transitions between screens
-- **AnimatedList / AnimatedSwitcher** for message updates
-- **Shimmer effect** for content placeholders
-- **Implicit animations** (`AnimatedContainer`, `AnimatedOpacity`)
-- **Custom transitions** using `PageRouteBuilder`
+- **Lottie animations** (splash, empty states, success/error)
+- **Hero animations** (screen-to-screen transitions)
+- **AnimatedList & AnimatedSwitcher** (real-time message updates)
+- **Shimmer effect** (loading placeholders)
+- **Implicit animations** (`AnimatedOpacity`, `AnimatedContainer`)
+- **Custom transitions** with `PageRouteBuilder`
 
-### Example: Add Lottie (pubspec.yaml)
+### Example: Adding Lottie in `pubspec.yaml`
 ```yaml
 dependencies:
   lottie: ^2.2.0
 ```
 
-### Example: Splash Screen with Lottie + FadeTransition
+### Example: Lottie Splash Screen + FadeTransition
 ```dart
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -68,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    Future.delayed(Duration(milliseconds: 1700), () {
+    Future.delayed(Duration(milliseconds: 1800), () {
       Navigator.of(context).pushReplacementNamed('/chat');
     });
   }
@@ -137,11 +135,8 @@ assets/
 
 ---
 
-## ⚙️ Dependencies (sample `pubspec.yaml`)
+## ⚙️ Dependencies (`pubspec.yaml`)
 ```yaml
-environment:
-  sdk: '>=2.18.0 <3.0.0'
-
 dependencies:
   flutter:
     sdk: flutter
@@ -164,7 +159,7 @@ dev_dependencies:
 ---
 
 ## 🚀 Run Locally
-Ensure you have **Flutter SDK** installed.
+Make sure you have **Flutter SDK** installed.
 
 1. Clone repository
 ```bash
@@ -189,23 +184,24 @@ flutter build apk --release
 ```bash
 flutter build ipa
 ```
-(Requires Xcode & Apple Developer account)
+*(Requires Xcode & Apple Developer Account)*
 
 ---
 
-## 🔐 API & Config
-Store all **sensitive keys** in environment files or secure storage. Do not commit secrets to the repo.
+## 🔐 API & Security
+- Store **API keys & tokens** in **.env files** or **secure storage**.
+- Never commit sensitive credentials to GitHub.
 
 ```dart
 class ApiConfig {
   static const String BASE_URL = 'https://api.pezshkyar.com';
-  // Use secure storage or remote config for tokens
+  // Use secure storage / remote config for tokens
 }
 ```
 
 ---
 
-## 💡 Example Widget: Animated ChatBubble
+## 💡 Example: Animated Chat Bubble
 ```dart
 import 'package:flutter/material.dart';
 
@@ -224,10 +220,7 @@ class ChatBubble extends StatelessWidget {
         tween: Tween(begin: 0.8, end: 1.0),
         duration: Duration(milliseconds: 350),
         builder: (context, value, child) {
-          return Transform.scale(
-            scale: value,
-            child: child,
-          );
+          return Transform.scale(scale: value, child: child);
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -250,9 +243,7 @@ class ChatBubble extends StatelessWidget {
           ),
           child: Text(
             text,
-            style: TextStyle(
-              color: isMe ? Colors.white : Colors.black87,
-            ),
+            style: TextStyle(color: isMe ? Colors.white : Colors.black87),
             textDirection: TextDirection.rtl,
           ),
         ),
@@ -267,49 +258,49 @@ class ChatBubble extends StatelessWidget {
 ## 🛠️ Recommended Packages
 - `flutter_native_splash` — native splash screen
 - `flutter_launcher_icons` — app icons
-- `cached_network_image` — image caching
-- `provider` or `riverpod` — state management
-- `shimmer` — skeleton loading animations
+- `cached_network_image` — optimized image loading
+- `riverpod` or `provider` — state management
+- `shimmer` — skeleton loaders
 
 ---
 
 ## 🧪 Testing
-- Unit and widget tests for chat logic & local storage
-- Network behavior tests using mocks (e.g., Mockito)
+- ✅ Unit & widget tests (chat logic, local storage)
+- ✅ API & network tests using mocks (e.g., Mockito)
+- ✅ Integration tests for real device behavior
 
 ---
 
 ## 🤝 Contributing
-1. Fork the project
+1. Fork this repository
 2. Create a feature branch: `git checkout -b feature/AmazingFeature`
 3. Commit changes: `git commit -m "Add AmazingFeature"`
 4. Push branch: `git push origin feature/AmazingFeature`
 5. Open a Pull Request
 
-Please open an issue first to discuss your proposal.
+> Please open an issue first to discuss your proposal.
 
 ---
 
 ## 📝 License
-This project is licensed under the **MIT License** — see the LICENSE file.
+Licensed under the **MIT License** — see the [LICENSE](LICENSE) file.
 
 ---
 
 ## 👨‍💻 Developer
-
 **Ehsan Fazli**  
-🚀 Full-Stack & Mobile Developer | Flutter Enthusiast | API Designer  
+🚀 Full-Stack & Mobile Developer | Flutter Enthusiast | API Designer
 
 - 📧 Email: [ehsanehsanfazlinejad.com](mailto:ehsanehsanfazlinejad.com)  
-- 🌐 Website: [https://ehsanjs.ir](https://ehsanjs.ir)  
+- 🌐 Website: [ehsanjs.ir](https://ehsanjs.ir)  
 - 💬 Telegram: [@Devehsan](https://t.me/Devehsan)  
 - 🐙 GitHub: [tsshack](https://github.com/tsshack)  
-- 🔗 LinkedIn: [linkedin.com/in/ehsanfazli](https://linkedin.com/in/ehsanfazli)  
+- 🔗 LinkedIn: [linkedin.com/in/ehsanfazli](https://linkedin.com/in/ehsanfazli)
 
 ---
 
 ## ⚠️ Disclaimer
-Pezshkyar provides **general medical information** only. It is **not a substitute** for professional medical advice, diagnosis, or treatment. Always consult a qualified physician for medical concerns.
+Pezshkyar provides **general medical information only**. It is **NOT a substitute** for professional medical advice, diagnosis, or treatment. Always consult a qualified physician.
 
 ---
 
@@ -318,4 +309,4 @@ Pezshkyar provides **general medical information** only. It is **not a substitut
 - [ ] Configure splash screen & icons
 - [ ] Test on multiple devices & screen sizes
 - [ ] Verify permissions & app store policies
-- [ ] Remove all sensitive keys from repo
+- [ ] Remove sensitive
