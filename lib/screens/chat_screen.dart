@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pezshkyar/config/constants.dart';
@@ -37,7 +38,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   List<Message> _messages = [];
   bool _isLoading = false;
   bool _showTypingIndicator = false;
-  bool _showQuickReplies = false;
 
   // Track expanded state for each message
   final Map<int, bool> _expandedMessages = {};
@@ -50,14 +50,39 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   late Animation<Offset> _slideAnimation;
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnimation;
+  late AnimationController _quickRepliesController;
+  late Animation<double> _quickRepliesAnimation;
+  late AnimationController _bubbleController;
+  late Animation<double> _bubbleAnimation;
+  late AnimationController _expandButtonController;
+  late Animation<double> _expandButtonAnimation;
 
-  // Quick replies
-  final List<String> _quickReplies = [
+  // Expanded list of quick replies
+  final List<String> _allQuickReplies = [
     'علت سردرد چیست؟',
     'علائم دیابت چیست؟',
     'چگونه فشار خون را پایین بیاوریم؟',
     'درمان سرماخوردگی چیست؟',
+    'علت کم‌خونی چیست؟',
+    'علائم کرونا چیست؟',
+    'چگونه وزن کم کنیم؟',
+    'درمان سوءهاضمه چیست؟',
+    'علت بی‌خوابی چیست؟',
+    'چگونه استرس را کنترل کنیم؟',
+    'علائم آلرژی چیست؟',
+    'درمان گلودرد چیست؟',
+    'علائم یبوست چیست؟',
+    'درمان سرفه خشک چیست؟',
+    'علت درد قفسه سینه چیست؟',
+    'چگونه کلسترول را پایین بیاوریم؟',
+    'علائم سوءتغذیه چیست؟',
+    'درمان درد معده چیست؟',
+    'چگونه قند خون را کنترل کنیم؟',
+    'علائم کم‌آبی بدن چیست؟',
   ];
+
+  // Randomly selected quick replies
+  late List<String> _quickReplies;
 
   @override
   void initState() {
@@ -66,6 +91,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _loadMessages();
     _notificationService.init();
     timeDilation = 1.0;
+
+    // Randomly select 4 quick replies
+    _randomizeQuickReplies();
 
     // Initialize animations
     _animationController = AnimationController(
@@ -102,8 +130,46 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       end: 1.0,
     ).animate(CurvedAnimation(parent: _shimmerController, curve: Curves.ease));
 
+    _quickRepliesController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _quickRepliesAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _quickRepliesController,
+        curve: Curves.easeOutBack,
+      ),
+    );
+
+    _bubbleController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _bubbleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _bubbleController, curve: Curves.elasticOut),
+    );
+
+    _expandButtonController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _expandButtonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _expandButtonController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
     _shimmerController.repeat();
+    _quickRepliesController.forward();
+    _bubbleController.forward();
+    _expandButtonController.forward();
+  }
+
+  void _randomizeQuickReplies() {
+    final random = Random();
+    final List<String> shuffled = List.from(_allQuickReplies)..shuffle(random);
+    setState(() {
+      _quickReplies = shuffled.take(4).toList();
+    });
   }
 
   @override
@@ -139,6 +205,27 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       _shimmerController.dispose();
     } catch (e) {
       debugPrint('Error disposing shimmer controller: $e');
+    }
+
+    try {
+      if (_quickRepliesController.isAnimating) _quickRepliesController.stop();
+      _quickRepliesController.dispose();
+    } catch (e) {
+      debugPrint('Error disposing quick replies controller: $e');
+    }
+
+    try {
+      if (_bubbleController.isAnimating) _bubbleController.stop();
+      _bubbleController.dispose();
+    } catch (e) {
+      debugPrint('Error disposing bubble controller: $e');
+    }
+
+    try {
+      if (_expandButtonController.isAnimating) _expandButtonController.stop();
+      _expandButtonController.dispose();
+    } catch (e) {
+      debugPrint('Error disposing expand button controller: $e');
     }
 
     super.dispose();
@@ -334,6 +421,117 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     setState(() {
       _expandedMessages[index] = !(_expandedMessages[index] ?? false);
     });
+    _expandButtonController.reset();
+    _expandButtonController.forward();
+  }
+
+  // Convert Gregorian date to Persian (Jalali) date
+  Map<String, int> _gregorianToJalali(int year, int month, int day) {
+    int gy = year;
+    int gm = month;
+    int gd = day;
+
+    List<int> g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    int jy;
+    if (gy > 1600) {
+      jy = 979;
+      gy -= 1600;
+    } else {
+      jy = 0;
+      gy -= 621;
+    }
+
+    int gy2;
+    if (gm > 2) {
+      gy2 = gy + 1;
+    } else {
+      gy2 = gy;
+    }
+
+    int days =
+        (365 * gy) +
+        ((gy2 + 3) ~/ 4) -
+        ((gy2 + 99) ~/ 100) +
+        ((gy2 + 399) ~/ 400) -
+        80 +
+        gd +
+        g_d_m[gm - 1];
+    jy += 33 * (days ~/ 12053);
+    days %= 12053;
+    jy += 4 * (days ~/ 1461);
+    days %= 1461;
+    if (days > 365) {
+      jy += (days - 1) ~/ 365;
+      days = (days - 1) % 365;
+    }
+
+    int jm;
+    int jd;
+    if (days < 186) {
+      jm = 1 + (days ~/ 31);
+      jd = 1 + (days % 31);
+    } else {
+      jm = 7 + ((days - 186) ~/ 30);
+      jd = 1 + ((days - 186) % 30);
+    }
+
+    return {'year': jy, 'month': jm, 'day': jd};
+  }
+
+  // Convert numbers to Persian
+  String _toPersianNumber(String number) {
+    const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+    for (int i = 0; i < english.length; i++) {
+      number = number.replaceAll(english[i], persian[i]);
+    }
+
+    return number;
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    final messageDate = DateTime(date.year, date.month, date.day);
+
+    // Compare only date parts (year, month, day)
+    if (messageDate.year == today.year &&
+        messageDate.month == today.month &&
+        messageDate.day == today.day) {
+      return 'امروز';
+    } else if (messageDate.year == yesterday.year &&
+        messageDate.month == yesterday.month &&
+        messageDate.day == yesterday.day) {
+      return 'دیروز';
+    } else {
+      // Convert to Persian (Jalali) date
+      try {
+        final persianDate = _gregorianToJalali(date.year, date.month, date.day);
+        final year = _toPersianNumber(persianDate['year'].toString());
+        final month = _toPersianNumber(
+          persianDate['month'].toString().padLeft(2, '0'),
+        );
+        final day = _toPersianNumber(
+          persianDate['day'].toString().padLeft(2, '0'),
+        );
+        return '$year/$month/$day';
+      } catch (e) {
+        debugPrint('Error converting date: $e');
+        // Fallback to Gregorian date if conversion fails
+        final year = _toPersianNumber(date.year.toString());
+        final month = _toPersianNumber(date.month.toString().padLeft(2, '0'));
+        final day = _toPersianNumber(date.day.toString().padLeft(2, '0'));
+        return '$year/$month/$day';
+      }
+    }
+  }
+
+  String _formatTime(DateTime date) {
+    final hour = date.hour.toString().padLeft(2, '0');
+    final minute = date.minute.toString().padLeft(2, '0');
+    return _toPersianNumber('$hour:$minute');
   }
 
   @override
@@ -375,7 +573,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 ),
                 child: ClipOval(
                   child: Image.asset(
-                    'icons/app_icon.png',
+                    'assets/icons/app_icon.png',
                     width: 36,
                     height: 36,
                     fit: BoxFit.cover,
@@ -485,90 +683,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ),
         child: Column(
           children: [
-            // Quick replies section
-            if (_messages.isEmpty || _showQuickReplies)
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'پاسخ‌های سریع:',
-                          style: GoogleFonts.vazirmatn(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: isDarkMode ? Colors.white70 : Colors.black54,
-                          ),
-                        ),
-                        if (_messages.isNotEmpty)
-                          IconButton(
-                            icon: Icon(
-                              _showQuickReplies
-                                  ? Icons.keyboard_arrow_up
-                                  : Icons.keyboard_arrow_down,
-                              color: isDarkMode
-                                  ? Colors.white70
-                                  : Colors.black54,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _showQuickReplies = !_showQuickReplies;
-                              });
-                            },
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    if (_messages.isEmpty || _showQuickReplies)
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: _quickReplies.map((reply) {
-                          return _buildQuickReplyChip(reply, isDarkMode);
-                        }).toList(),
-                      ),
-                  ],
-                ),
-              ),
-
-            // Date separator
-            if (_messages.isNotEmpty)
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: isDarkMode
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.black.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  _messages.first.formattedDate,
-                  style: GoogleFonts.vazirmatn(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: isDarkMode ? Colors.white70 : Colors.black54,
-                  ),
-                ),
-              ),
-
             // Chat messages
             if (_messages.isEmpty)
               Expanded(
@@ -612,6 +726,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                   : Colors.black54,
                             ),
                           ),
+                          const SizedBox(height: 40),
+                          // Quick replies section
+                          _buildQuickRepliesSection(isDarkMode, size),
                         ],
                       ),
                     ),
@@ -635,8 +752,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         final message = _messages[index];
                         final showDate =
                             index == 0 ||
-                            message.formattedDate !=
-                                _messages[index - 1].formattedDate;
+                            _formatDate(message.timestamp) !=
+                                _formatDate(_messages[index - 1].timestamp);
 
                         return AnimationConfiguration.staggeredList(
                           position: index,
@@ -684,7 +801,122 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ],
         ),
       ),
-      // Floating action button removed
+    );
+  }
+
+  Widget _buildQuickRepliesSection(bool isDarkMode, Size size) {
+    return FadeTransition(
+      opacity: _quickRepliesAnimation,
+      child: ScaleTransition(
+        scale: _quickRepliesAnimation,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isDarkMode
+                  ? [
+                      Colors.white.withOpacity(0.12),
+                      Colors.white.withOpacity(0.06),
+                    ]
+                  : [
+                      AppConstants.primaryColor.withOpacity(0.15),
+                      AppConstants.secondaryColor.withOpacity(0.08),
+                    ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+              BoxShadow(
+                color: AppConstants.primaryColor.withOpacity(0.2),
+                blurRadius: 25,
+                offset: const Offset(0, 5),
+              ),
+            ],
+            border: Border.all(
+              color: isDarkMode
+                  ? Colors.white.withOpacity(0.15)
+                  : AppConstants.primaryColor.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: AppConstants.primaryColor,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppConstants.primaryColor.withOpacity(0.5),
+                              blurRadius: 8,
+                              offset: const Offset(0, 0),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.flash_on,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'پاسخ‌های سریع',
+                        style: GoogleFonts.vazirmatn(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: isDarkMode ? Colors.white70 : Colors.black54,
+                      size: 22,
+                    ),
+                    onPressed: _randomizeQuickReplies,
+                    splashRadius: 24,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: _quickReplies.map((reply) {
+                  return _buildQuickReplyChip(reply, isDarkMode);
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'برای سوالات دیگر، می‌توانید مستقیماً تایپ کنید',
+                style: GoogleFonts.vazirmatn(
+                  fontSize: 14,
+                  color: isDarkMode ? Colors.white54 : Colors.black38,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -696,18 +928,19 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(20),
         splashColor: AppConstants.primaryColor.withOpacity(0.3),
         highlightColor: AppConstants.primaryColor.withOpacity(0.1),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: isDarkMode
                   ? [
-                      Colors.white.withOpacity(0.1),
-                      Colors.white.withOpacity(0.05),
+                      Colors.white.withOpacity(0.15),
+                      Colors.white.withOpacity(0.08),
                     ]
                   : [
-                      AppConstants.primaryColor.withOpacity(0.1),
-                      AppConstants.secondaryColor.withOpacity(0.05),
+                      AppConstants.primaryColor.withOpacity(0.12),
+                      AppConstants.secondaryColor.withOpacity(0.06),
                     ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -715,24 +948,40 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isDarkMode
-                  ? Colors.white.withOpacity(0.2)
-                  : AppConstants.primaryColor.withOpacity(0.2),
+                  ? Colors.white.withOpacity(0.25)
+                  : AppConstants.primaryColor.withOpacity(0.25),
             ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+              BoxShadow(
+                color: AppConstants.primaryColor.withOpacity(0.15),
+                blurRadius: 10,
+                offset: const Offset(0, 0),
               ),
             ],
           ),
-          child: Text(
-            reply,
-            style: GoogleFonts.vazirmatn(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: isDarkMode ? Colors.white : Colors.black87,
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.question_answer_outlined,
+                size: 16,
+                color: isDarkMode ? Colors.white70 : Colors.black54,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                reply,
+                style: GoogleFonts.vazirmatn(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: isDarkMode ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -811,9 +1060,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   ) {
     final isExpanded = _expandedMessages[index] ?? false;
     final text = message.text;
-    final isLongText = text.length > 300;
+    final isLongText = text.length > 500;
     final displayText = isLongText && !isExpanded
-        ? '${text.substring(0, 300)}...'
+        ? '${text.substring(0, 500)}...'
         : text;
 
     return Column(
@@ -837,7 +1086,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               ],
             ),
             child: Text(
-              message.formattedDate,
+              _formatDate(message.timestamp),
               style: GoogleFonts.vazirmatn(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -1157,7 +1406,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // Show more button for long texts
+              // Professional show more/less button
               if (isLongText)
                 Padding(
                   padding: const EdgeInsets.only(
@@ -1165,48 +1414,107 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     left: 16,
                     right: 16,
                   ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _toggleMessageExpansion(index),
-                      borderRadius: BorderRadius.circular(8),
-                      splashColor: AppConstants.primaryColor.withOpacity(0.3),
-                      highlightColor: AppConstants.primaryColor.withOpacity(
-                        0.1,
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        decoration: BoxDecoration(
-                          color: isDarkMode
-                              ? Colors.white.withOpacity(0.05)
-                              : Colors.black.withOpacity(0.03),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: AppConstants.primaryColor.withOpacity(0.3),
-                            width: 1,
-                          ),
+                  child: ScaleTransition(
+                    scale: _expandButtonAnimation,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => _toggleMessageExpansion(index),
+                        borderRadius: BorderRadius.circular(12),
+                        splashColor: AppConstants.primaryColor.withOpacity(0.3),
+                        highlightColor: AppConstants.primaryColor.withOpacity(
+                          0.1,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              isExpanded ? 'نمایش کمتر' : 'نمایش کامل',
-                              style: GoogleFonts.vazirmatn(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppConstants.primaryColor,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: isDarkMode
+                                  ? [
+                                      Colors.white.withOpacity(0.1),
+                                      Colors.white.withOpacity(0.05),
+                                    ]
+                                  : [
+                                      AppConstants.primaryColor.withOpacity(
+                                        0.1,
+                                      ),
+                                      AppConstants.secondaryColor.withOpacity(
+                                        0.05,
+                                      ),
+                                    ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppConstants.primaryColor.withOpacity(0.3),
+                              width: 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(
-                              isExpanded
-                                  ? Icons.keyboard_arrow_up
-                                  : Icons.keyboard_arrow_down,
-                              color: AppConstants.primaryColor,
-                              size: 18,
-                            ),
-                          ],
+                              BoxShadow(
+                                color: AppConstants.primaryColor.withOpacity(
+                                  0.2,
+                                ),
+                                blurRadius: 12,
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder:
+                                    (
+                                      Widget child,
+                                      Animation<double> animation,
+                                    ) {
+                                      return ScaleTransition(
+                                        scale: animation,
+                                        child: child,
+                                      );
+                                    },
+                                child: Icon(
+                                  isExpanded
+                                      ? Icons.expand_less
+                                      : Icons.expand_more,
+                                  key: ValueKey<bool>(isExpanded),
+                                  color: AppConstants.primaryColor,
+                                  size: 24,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder:
+                                    (
+                                      Widget child,
+                                      Animation<double> animation,
+                                    ) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      );
+                                    },
+                                child: Text(
+                                  isExpanded ? 'نمایش کمتر' : 'نمایش کامل',
+                                  key: ValueKey<bool>(isExpanded),
+                                  style: GoogleFonts.vazirmatn(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppConstants.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1226,7 +1534,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       : Colors.black.withOpacity(0.03),
                 ),
                 child: Text(
-                  message.formattedTime,
+                  _formatTime(message.timestamp),
                   style: GoogleFonts.vazirmatn(
                     fontSize: 12,
                     color: isDarkMode ? Colors.white54 : Colors.black38,
@@ -1285,7 +1593,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
       child: ClipOval(
         child: Image.asset(
-          'icons/app_icon.png',
+          'assets/icons/app_icon.png',
           width: 160,
           height: 160,
           fit: BoxFit.cover,
