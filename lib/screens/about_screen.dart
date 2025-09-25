@@ -126,7 +126,7 @@ class _AboutScreenState extends State<AboutScreen>
                         ),
                         child: ClipOval(
                           child: Image.asset(
-                            'images/ehsan.png',
+                            'assets/images/ehsan.png',
                             width: 180,
                             height: 180,
                             fit: BoxFit.cover,
@@ -564,4 +564,5 @@ class _AboutScreenState extends State<AboutScreen>
     }
   }
 }
+
 
