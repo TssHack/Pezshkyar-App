@@ -44,14 +44,14 @@ jobs:
       - name: Flutter Pub Get
         run: flutter pub get
 
-      - name: Build iOS IPA
+      - name: Build iOS Archive (no codesign)
         run: flutter build ipa --release --no-codesign
 
-      - name: Upload Artifact (iOS)
+      - name: Upload Artifact (iOS Archive)
         uses: actions/upload-artifact@v4
         with:
-          name: ios
-          path: build/ios/ipa/*.ipa
+          name: ios-archive
+          path: build/ios/archive/Runner.xcarchive/**
 
   macos:
     runs-on: macos-latest
@@ -124,6 +124,9 @@ jobs:
 
       - name: Flutter Pub Get
         run: flutter pub get
+
+      - name: Ensure Linux project files
+        run: flutter create --platforms=linux .
 
       - name: Build Linux
         run: flutter build linux --release
