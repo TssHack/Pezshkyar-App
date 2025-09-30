@@ -533,7 +533,7 @@ class _AboutScreenState extends State<AboutScreen>
   Future<void> _sendFeedbackToTelegram(String message) async {
     const chatId = '-1002980426809';
 
-    final url = 'https://mssagerr.vercel.app/sendMessage';
+    final url = 'https://msg.ehsanjs.ir/sendMessage';
 
     try {
       await http.post(
@@ -564,5 +564,6 @@ class _AboutScreenState extends State<AboutScreen>
     }
   }
 }
+
 
 
