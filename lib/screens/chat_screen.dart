@@ -323,7 +323,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           await _notificationService.showNotification(
             title: 'پزشکیار',
             body:
-                'پاسخ طولانی دریافت شد. برای مشاهده کامل پاسخ، برنامه را باز کنید.',
+                'پیام جدید!',
           );
         } catch (e) {
           debugPrint('Error showing notification: $e');
@@ -1610,3 +1610,4 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 }
+
