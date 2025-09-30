@@ -23,7 +23,7 @@ class ApiService {
             ),
           )
           .timeout(
-            const Duration(seconds: 30),
+            const Duration(seconds: 60),
             onTimeout: () {
               _cancelCompleter?.complete();
               throw TimeoutException('Connection timed out');
@@ -78,4 +78,5 @@ class ApiService {
     _cancelRequest();
   }
 }
+
 
