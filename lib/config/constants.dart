@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppConstants {
   static const String appName = 'پزشکیار';
   static const String apiBaseUrl =
-      'https://docter-api.vercel.app/api/doctor-chat';
+      'https://api.nexzo.ir/api/doctor-chat';
 
   // Asset paths
   static const String logoPath = 'assets/images/logo.png';
@@ -24,3 +24,4 @@ class AppConstants {
   static const String chatHistoryKey = 'chat_history';
   static const String themeModeKey = 'theme_mode';
 }
+
