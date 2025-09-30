@@ -17,10 +17,10 @@ class ApiService {
 
     try {
       final response = await _client!
-          .get(
-            Uri.parse(
-              '${AppConstants.apiBaseUrl}?message=${Uri.encodeComponent(userMessage)}',
-            ),
+          .post(
+            Uri.parse(AppConstants.apiBaseUrl),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({'message': userMessage}),
           )
           .timeout(
             const Duration(seconds: 60),
@@ -57,7 +57,7 @@ class ApiService {
 
       return Message(
         text:
-            'درخواست لغو شد.',
+            'متأسفانه در ارتباط با سرور مشکلی پیش آمده است. لطفاً دوباره تلاش کنید.',
         isUser: false,
         timestamp: DateTime.now(),
       );
@@ -78,5 +78,4 @@ class ApiService {
     _cancelRequest();
   }
 }
-
 
