@@ -57,7 +57,7 @@ class ApiService {
 
       return Message(
         text:
-            'متأسفانه در ارتباط با سرور مشکلی پیش آمده است. لطفاً دوباره تلاش کنید.',
+            'درخواست لغو شد.',
         isUser: false,
         timestamp: DateTime.now(),
       );
@@ -78,3 +78,4 @@ class ApiService {
     _cancelRequest();
   }
 }
+
