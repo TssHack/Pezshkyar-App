@@ -1,7 +1,7 @@
 name: pezshkyar
 description: "A new Flutter project."
 
-version: 1.0.1+2
+version: 1.1.1+2
 
 environment:
   sdk: ^3.8.1
@@ -60,6 +60,7 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/icons/
+
 
 
 
